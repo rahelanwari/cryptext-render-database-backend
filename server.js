@@ -31,22 +31,6 @@ app.post('/api/auth', async (req, res) => {
     res.status(500).json({ error: 'Database error' });
   }
 });
-app.post('/api/users', async (req, res) => {
-  const { cryptext_id, display_name, mnemonic_phrase } = req.body;
-
-  try {
-    const result = await pool.query(
-      `INSERT INTO users (cryptext_id, display_name, mnemonic_phrase)
-       VALUES ($1, $2, $3) RETURNING *`,
-      [cryptext_id, display_name, mnemonic_phrase]
-    );
-
-    res.status(201).json({ success: true, user: result.rows[0] });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, error: 'Fout bij aanmaken account' });
-  }
-});
 
 // ✉️ Bericht opslaan
 app.post('/api/messages', async (req, res) => {
