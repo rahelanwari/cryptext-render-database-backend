@@ -47,22 +47,7 @@ app.post('/api/messages', async (req, res) => {
     res.status(500).json({ error: 'Fout bij opslaan bericht' });
   }
 });
-app.post('/api/users', async (req, res) => {
-  const { cryptext_id, display_name, mnemonic_phrase } = req.body;
 
-  try {
-    const result = await pool.query(
-      `INSERT INTO users (cryptext_id, display_name, mnemonic_phrase)
-       VALUES ($1, $2, $3) RETURNING *`,
-      [cryptext_id, display_name, mnemonic_phrase]
-    );
-
-    res.status(201).json({ success: true, user: result.rows[0] });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ success: false, error: 'Fout bij aanmaken account' });
-  }
-});
 
 
 // ✉️ Berichten ophalen
@@ -83,3 +68,20 @@ app.get('/api/messages/:user_id', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Cryptext backend draait op poort ${PORT}`));
+app.post('/api/users', async (req, res) => {
+  const { cryptext_id, display_name, mnemonic_phrase } = req.body;
+
+  try {
+    const result = await pool.query(
+      `INSERT INTO users (cryptext_id, display_name, mnemonic_phrase)
+       VALUES ($1, $2, $3) RETURNING *`,
+      [cryptext_id, display_name, mnemonic_phrase]
+    );
+
+    res.status(201).json({ success: true, user: result.rows[0] });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, error: 'Fout bij aanmaken account' });
+  }
+});
+
